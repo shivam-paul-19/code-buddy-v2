@@ -1,43 +1,73 @@
 import Editor from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import { executeCode } from "../execution";
+import { defaultLines, buttonLabels } from "../languages";
 
-function CodeEditor({ language, line }) {
-    const editorRef = useRef(null);
-    let [value, setValue] = useState(line);
-    let [output, setOutput] = useState("");
-
-    const handleMount = (editor) => {
-        editorRef.current = editor;
-        editor.focus();
+function CodeEditor({
+  language = "python",
+  disableDropDown = false,
+  disbaleSubmission = false,
+  line,
+  mode,
+}) {
+  // this function will call on the first render of the page
+  useEffect(() => {
+    // if line isn't defined then take it from the map
+    if (!line) {
+      setValue(defaultLines.get(language).defaultLine.get(mode));
     }
+  }, []);
 
-    const handleSubmission = async () => {
-        let out = await executeCode(value, language);
-        setOutput(out);
-    }
+  // state and reference variables
+  const editorRef = useRef(null);
+  let [value, setValue] = useState(line);
+  let [lang, setLang] = useState(language);
 
-    useEffect(() => {
-        setValue(line);
-    }, [line]);
+  // puts focus on the editor
+  const handleMount = (editor) => {
+    editorRef.current = editor;
+    editor.focus();
+  };
 
-    return (
-        <>
-        <Editor
-            height="80vh"
-            language={language}
-            theme="vs-dark"
-            value={line}
-            onChange={(value) => setValue(value)}
-            options={{ quickSuggestions: false }}
-            onMount={handleMount}
-        />
-        <button onClick={handleSubmission}>run code</button>
-        <div style={{backgroundColor: "#fafa", height: "100px", width: "100%"}}>
-            output:<br/>{output}
-        </div>
-        </>
-    );
+  const languageChange = (e) => {
+    setLang(e.target.value);
+    setValue(defaultLines.get(e.target.value).defaultLine.get(mode));
+  };
+
+  const handleSubmission = () => {
+    console.log(value);
+  };
+
+  return (
+    <>
+      {!disableDropDown ? (
+        <form onChange={languageChange}>
+          <label htmlFor="lang">Choose langauge</label>
+          <select name="lang" id="lang">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="java">Java</option>
+          </select>
+        </form>
+      ) : null}
+
+      <Editor
+        height="80vh"
+        language={lang}
+        theme="vs-dark"
+        value={value}
+        onChange={(value) => setValue(value)}
+        options={{ quickSuggestions: false }}
+        onMount={handleMount}
+      />
+      {
+        (!disbaleSubmission)? (
+          <button onClick={handleSubmission}>{buttonLabels.get(mode)}</button>
+        ) : null
+      }
+      
+    </>
+  );
 }
 
 export default CodeEditor;
