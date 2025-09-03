@@ -5,10 +5,13 @@ import { useState } from "react";
 function Solver() {
     const navigator = useNavigate();
     let [solved, setSolved] = useState(false);
+    let [output, setOutput] = useState("");
 
     const handleSumbission = (e) => {
         e.preventDefault();
+        console.log(e.target[0].value);
         setSolved(true);
+        setOutput("here");
     }
 
     return (
@@ -20,7 +23,9 @@ function Solver() {
             </form>
             {
                 (solved)? (
-                    <CodeEditor mode="solve"/>
+                    <div>
+                        {output}
+                    </div>
                 ) : null
             }
             <button onClick={() => {
