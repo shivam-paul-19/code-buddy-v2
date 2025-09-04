@@ -2,6 +2,10 @@ import Editor from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import { executeCode } from "../execution";
 import { defaultLines, buttonLabels } from "../languages";
+import { getMockResponse } from "../fakeres";
+import { getResponse } from "../generate";
+
+const API_KEY = import.meta.env.VITE_OPEN_AI_API_KEY;
 
 function CodeEditor({
   language = "python",
@@ -9,19 +13,28 @@ function CodeEditor({
   disbaleSubmission = false,
   line,
   mode,
+  sendValue
 }) {
   // this function will call on the first render of the page
   useEffect(() => {
     // if line isn't defined then take it from the map
     if (!line) {
-      setValue(defaultLines.get(language).defaultLine.get(mode));
+      line = defaultLines.get(language).defaultLine.get(mode);
     }
   }, []);
+
+  useEffect(() => {
+    setValue(line);
+  }, [line]);
 
   // state and reference variables
   const editorRef = useRef(null);
   let [value, setValue] = useState(line);
   let [lang, setLang] = useState(language);
+
+  useEffect(() => {
+    sendValue(value);
+  }, [value]);
 
   // puts focus on the editor
   const handleMount = (editor) => {
@@ -32,10 +45,24 @@ function CodeEditor({
   const languageChange = (e) => {
     setLang(e.target.value);
     setValue(defaultLines.get(e.target.value).defaultLine.get(mode));
+    setValue(value);
   };
 
-  const handleSubmission = () => {
-    console.log(value);
+  const handleSubmission = async () => {
+    let val = "";   // the response
+    let mode_ = ""; // the mode, initailise with blank for now
+
+    // modify mode according to the input mode
+    if(mode == "pseudo_in") {
+      mode_ = "pseudo";
+    } else if(mode == "enhance_in") {
+      mode_ = "enhance";
+    }
+
+    // call the API
+    val = await getResponse(value, mode_, API_KEY, lang);
+    // send value
+    sendValue(val);
   };
 
   return (

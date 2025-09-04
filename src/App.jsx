@@ -4,7 +4,6 @@ import Enhancer from './enhancer';
 import Pseudo from './pseudo';
 import Solver from './solver';
 
-
 function App() {
   const router = createBrowserRouter([
     {
@@ -23,7 +22,8 @@ function App() {
       path: '/solve',
       element: <Solver />
     },
-  ])
+  ]);
+
   return (
     <>
         <RouterProvider router={router}/>

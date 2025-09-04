@@ -1,6 +1,7 @@
 // this file is for the interaction with the openAI API and manage prompts
 
 import OpenAI from "openai";
+import { getMockResponse } from "./fakeres";
 
 /**
  * Calls the OpenAI API with a given prompt.
@@ -11,7 +12,8 @@ import OpenAI from "openai";
  */
 const callAPI = async (key, prompt) => {
     const client = new OpenAI({
-        apiKey: key
+        apiKey: key,
+        dangerouslyAllowBrowser: true
     });
     
     const response = await client.responses.create({
@@ -64,12 +66,19 @@ const getPrompt = (mode, lang, input) => {
                 (Brief list, no code)`;
     } else if (mode == "enhance") {
         // prompt to enhance code
-        return `Enhance this ${lang} code by improving readability, and optimising it:
+        return `Enhance this ${lang} code by:
+                - Improving readability with proper naming conventions of variables and function
+                - Optimizing performance
+                - Debugging if needed
+                - Adding subtle comments
+                - Removing or reducing code duplication
+
+                Code to enhance:
                 ${input}
 
-                Return ONLY the improved ${lang} code.
-                No markdown, no explanation text outside code.
-                Subtle comments inside code are allowed.`;
+                Return ONLY valid ${lang} code.
+                No markdown, no extra explanation outside the code.
+                Subtle inline comments are allowed.`;
     } else if (mode == "pseudo") {
             // prompt to convert pseudo code into actual code
             return `Convert this pseudo code into ${lang}, keep the logic same by understanding the pseudo code:
@@ -96,5 +105,6 @@ export const getResponse = async (input, mode, key, lang) => {
     let prompt = getPrompt(mode, lang, input);
     // get the response
     let response = await callAPI(key, prompt);
-    return response;
+    // return the response
+    return response.output_text;
 };
