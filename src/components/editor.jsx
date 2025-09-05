@@ -32,10 +32,6 @@ function CodeEditor({
   let [value, setValue] = useState(line);
   let [lang, setLang] = useState(language);
 
-  useEffect(() => {
-    sendValue(value);
-  }, [value]);
-
   // puts focus on the editor
   const handleMount = (editor) => {
     editorRef.current = editor;
@@ -49,20 +45,7 @@ function CodeEditor({
   };
 
   const handleSubmission = async () => {
-    let val = "";   // the response
-    let mode_ = ""; // the mode, initailise with blank for now
-
-    // modify mode according to the input mode
-    if(mode == "pseudo_in") {
-      mode_ = "pseudo";
-    } else if(mode == "enhance_in") {
-      mode_ = "enhance";
-    }
-
-    // call the API
-    val = await getResponse(value, mode_, API_KEY, lang);
-    // send value
-    sendValue(val);
+    sendValue(value, lang);
   };
 
   return (

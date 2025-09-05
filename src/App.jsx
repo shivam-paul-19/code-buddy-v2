@@ -3,6 +3,7 @@ import Home from './home';
 import Enhancer from './enhancer';
 import Pseudo from './pseudo';
 import Solver from './solver';
+import EditorPage from './editorpage';
 
 function App() {
   const router = createBrowserRouter([
@@ -22,6 +23,10 @@ function App() {
       path: '/solve',
       element: <Solver />
     },
+    {
+      path: '/test',
+      element: <EditorPage />
+    }
   ]);
 
   return (
