@@ -11,11 +11,18 @@ function Solver() {
     const navigator = useNavigate();
     let [solved, setSolved] = useState(false);
     let [output, setOutput] = useState("");
+    let [code, setCode] = useState("");
+    let [lang, setLang] = useState("");
 
     const handleSumbission = async (e) => {
         e.preventDefault();
         setSolved(true);
         let res = await getResponse(e.target[0].value, "solve", API_KEY, e.target[1].value);
+        let start = res.indexOf("```") + (`${e.target[1].value}`).length;
+        let end = res.lastIndexOf("```");
+        let code = res.substring(start+2, end);
+        setCode(code);
+        setLang(e.target[1].value);
         setOutput(marked(res));
     }
 
@@ -41,6 +48,18 @@ function Solver() {
             <button onClick={() => {
                 navigator('/')
             }}>back</button>
+            <button onClick={() => {
+                navigator('/test', {
+                    state: {
+                        line: code,
+                        language: lang,
+                        parentPath: '/solve'
+                    }
+                })
+            }}>test code</button>
+            <button onClick={async () => {
+                await window.navigator.clipboard.writeText(code);
+            }}>Copy code</button>
         </>
     );
 }

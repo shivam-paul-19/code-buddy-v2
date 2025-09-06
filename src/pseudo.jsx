@@ -3,6 +3,17 @@ import CodeEditor from "./components/editor";
 import { useState } from "react";
 import { getResponse } from "./generate";
 
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle
+} from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+
 let key = import.meta.env.VITE_OPEN_AI_API_KEY;
 
 function Pseudo() {
@@ -11,11 +22,18 @@ function Pseudo() {
     // gets value from the input code editor's value
     // and also get's response from OpenAI API
     const convertPseudo = async (value, lang) => {
+        setIsLoad(true);
+        SetOpen(true);
         let res = await getResponse(value, "pseudo", key, lang);
-        console.log(res);
+        setIsLoad(false);
+        setOutput(res);
+        setLang(lang);
     }
 
     let [output, setOutput] = useState("");
+    let [isLoad, setIsLoad] = useState(false);
+    let [open, SetOpen] = useState(false);
+    let [lang, setLang] = useState("Python");
     
     return (
         <>
@@ -24,9 +42,45 @@ function Pseudo() {
             <button onClick={() => {
                 navigator('/')
             }}>back</button>
-            <button onClick={() => {
-                navigator('/test');
-            }}>Test code</button>
+            
+            <Drawer open={open} onOpenChange={SetOpen}>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Here's the actual Code</DrawerTitle>
+              <DrawerDescription>
+                <div style={{
+                    overflowX: "scroll",
+                    maxHeight: "320px"
+                }}>
+                    {
+                        (!isLoad)? (
+                            <CodeEditor disableDropDown={true} line={output}/>
+                        ) : (
+                            <p>Loading</p>
+                        )
+                    }
+                </div>
+              </DrawerDescription>
+            </DrawerHeader>
+            <DrawerFooter>
+              <Button onClick={() => {
+                navigator("/test", {
+                  state: {
+                    line: output,
+                    language: lang,
+                    parentPath: '/pseudo'
+                  }
+                })
+              }}>Test Code</Button>
+              <Button onClick={async () => {
+                await window.navigator.clipboard.writeText(output);
+              }}>Copy Code</Button>
+              <DrawerClose>
+                <Button variant="outline" onClick={() => SetOpen(false)}>Close</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
         </>
     );
 }

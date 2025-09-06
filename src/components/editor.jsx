@@ -1,11 +1,6 @@
 import Editor from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
-import { executeCode } from "../execution";
 import { defaultLines, buttonLabels } from "../languages";
-import { getMockResponse } from "../fakeres";
-import { getResponse } from "../generate";
-
-const API_KEY = import.meta.env.VITE_OPEN_AI_API_KEY;
 
 function CodeEditor({
   language = "python",
@@ -13,7 +8,7 @@ function CodeEditor({
   disbaleSubmission = false,
   line,
   mode,
-  sendValue
+  sendValue = ((v, l) => {})
 }) {
   // this function will call on the first render of the page
   useEffect(() => {

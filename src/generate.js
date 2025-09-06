@@ -1,7 +1,7 @@
 // this file is for the interaction with the openAI API and manage prompts
 
 import OpenAI from "openai";
-// import { getMockResponse } from "./fakeres";
+import { getMockResponse } from "./fakeres";
 
 /**
  * Calls the OpenAI API with a given prompt.
@@ -124,8 +124,11 @@ export const getResponse = async (input, mode, key, lang) => {
     let prompt = getPrompt(mode, lang, input);
     console.log(prompt);
     // get the response
-    let response = await callAPI(key, prompt);
+    // let response = await callAPI(key, prompt);
     // return the response
-    return response.output_text;
-    // return "working bro";
+    // return response.output_text;
+    await (() => {
+        return new Promise(resolve => setTimeout(resolve, 2000));
+    })();
+    return getMockResponse(mode).output;
 };

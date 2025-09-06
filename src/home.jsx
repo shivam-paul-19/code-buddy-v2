@@ -1,35 +1,40 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/Button"
+import { Button } from "@/components/ui/Button";
+
+import "./style/home.css";
 
 function Home() {
   const navigator = useNavigate();
-  const buttonStyle = {
-    backgroundColor: "#002200",
-    color: "white"
-  }
+  
   return (
     <>
-      <Button style={buttonStyle}
+      <div className="home-container">
+        <h1 className="home-title">&lt; Code buddy &gt;</h1>
+      <div className="home-but-grp">
+
+      <Button className="home-but"
         onClick={() => {
           navigator("/pseudo");
         }}
-      >
+        >
         Pseudo to actual code
       </Button>
-      <Button style={buttonStyle}
+      <Button className="home-but"
         onClick={() => {
           navigator("/enhancer");
         }}
-      >
+        >
         Code enhancer
       </Button>
-      <Button style={buttonStyle}
+      <Button className="home-but"
         onClick={() => {
           navigator("/solve");
         }}
-      >
+        >
         DSA Solver
       </Button>
+          </div>
+        </div>
     </>
   );
 }

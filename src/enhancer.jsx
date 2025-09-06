@@ -1,5 +1,4 @@
 import {useNavigate} from "react-router-dom";
-import EditorPage from "./editorpage";
 import CodeEditor from "./components/editor";
 import { useState } from "react";
 import { getResponse } from "./generate";
@@ -11,8 +10,7 @@ import {
   DrawerDescription,
   DrawerFooter,
   DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
+  DrawerTitle
 } from "@/components/ui/drawer"
 import { Button } from "@/components/ui/button"
 
@@ -28,13 +26,14 @@ function Enhancer() {
         SetOpen(true);
         let res = await getResponse(value, "enhance", key, lang);
         setIsLoad(false);
-        console.log(res);
         setOutput(res);
+        setLang(lang);
     }
     
     let [output, setOutput] = useState("");
     let [isLoad, setIsLoad] = useState(false);
     let [open, SetOpen] = useState(false);
+    let [lang, setLang] = useState("Python");
 
     return (
       <>
@@ -68,8 +67,18 @@ function Enhancer() {
               </DrawerDescription>
             </DrawerHeader>
             <DrawerFooter>
-              <Button>Test Code</Button>
-              <Button>Copy Code</Button>
+              <Button onClick={() => {
+                navigator("/test", {
+                  state: {
+                    line: output,
+                    language: lang,
+                    parentPath: '/enhancer'
+                  }
+                })
+              }}>Test Code</Button>
+              <Button onClick={async () => {
+                await window.navigator.clipboard.writeText(output);
+              }}>Copy Code</Button>
               <DrawerClose>
                 <Button variant="outline" onClick={() => SetOpen(false)}>Close</Button>
               </DrawerClose>
