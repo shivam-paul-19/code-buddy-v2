@@ -1,66 +1,127 @@
 import {useNavigate} from "react-router-dom";
-import CodeEditor from "./components/editor";
 import { useState } from "react";
-import { getMockResponse } from "./fakeres";
 import { marked } from "marked";
 import { getResponse } from "./generate";
 
-const API_KEY = import.meta.env.VITE_OPEN_AI_API_KEY
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/Button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+import "./style/pages.css";
+
+const API_KEY = import.meta.env.VITE_OPEN_AI_API_KEY;
 
 function Solver() {
     const navigator = useNavigate();
     let [solved, setSolved] = useState(false);
     let [output, setOutput] = useState("");
     let [code, setCode] = useState("");
-    let [lang, setLang] = useState("");
+    let [lang, setLang] = useState("python");
+    let [load, setLoad] = useState(false);
 
     const handleSumbission = async (e) => {
         e.preventDefault();
-        setSolved(true);
-        let res = await getResponse(e.target[0].value, "solve", API_KEY, e.target[1].value);
-        let start = res.indexOf("```") + (`${e.target[1].value}`).length;
+        setLoad(true);
+        let res = await getResponse(e.target[0].value, "solve", API_KEY, lang);
+        let start = res.indexOf("```") + (lang).length;
         let end = res.lastIndexOf("```");
         let code = res.substring(start+2, end);
         setCode(code);
-        setLang(e.target[1].value);
         setOutput(marked(res));
+        setLoad(false);
+        setSolved(true);
     }
 
+    const languageChange = (e) => {
+        setLang(e.target.value);
+    };
+
     return (
-        <>
-            <h1>this is DSA solver</h1>
-            <form onSubmit={handleSumbission}>
-                <input type="text" />
-                <select>
-                    <option value="python">Python</option>
-                    <option value="Java">Java</option>
-                    <option value="C++">C++</option>
-                </select>
-                <button type="submit">Solve</button>
+      <>
+        <div className="page">
+          <h1 className="page-title">DSA Solver</h1>
+          <p className="page-tag">
+            Drop any problem link of LeetCode, GeekForGeeks etc. and get
+            structured answers
+            <br />
+            (Select the language of the output, by default it is <b>
+              Python
+            </b>{" "}
+            if not selected)
+            </p>
+            <br />
+            <div className="dsa-link-input">
+                <div className="lang-selector input-elements">
+            <form onChange={languageChange}>
+                <Select>
+                <SelectTrigger className="w-[200px]" style={{
+                    border: 0,
+                    color: "white"
+                }}>
+                <SelectValue placeholder="Select the langauge"/>
+                </SelectTrigger>
+                <SelectContent>
+                <SelectGroup>
+                    <SelectLabel>Languages</SelectLabel>
+                    <SelectItem value="python">Python</SelectItem>
+                    <SelectItem value="javascript">JavaScript</SelectItem>
+                    <SelectItem value="java">Java</SelectItem>
+                </SelectGroup>
+                </SelectContent>
+                </Select>
             </form>
-            {
-                (solved)? (
-                    <div
-                        dangerouslySetInnerHTML={{ __html: output }}
-                    />
-                ) : null
-            }
-            <button onClick={() => {
-                navigator('/')
-            }}>back</button>
-            <button onClick={() => {
-                navigator('/test', {
+            </div>
+
+          <form onSubmit={handleSumbission} className="link-input">
+                <Input className="input-elements" type="text" placeholder="Put the link here" required/>
+            <Button className="input-elements white-but" type="submit">Solve</Button>
+          </form>
+                </div>
+          {solved ? (<>
+          <br /><br />
+            <Button className="white-but"
+            onClick={() => {
+                navigator("/test", {
                     state: {
-                        line: code,
-                        language: lang,
-                        parentPath: '/solve'
-                    }
-                })
-            }}>test code</button>
-            <button onClick={async () => {
+                  line: code,
+                  language: lang,
+                  parentPath: "/solve",
+                },
+            });
+        }}
+          >
+            test code
+          </Button>
+          <Button variant="outline white-but"
+            onClick={async () => {
                 await window.navigator.clipboard.writeText(code);
-            }}>Copy code</button>
-        </>
+            }}
+          >
+            Copy code
+          </Button>
+          <div className="dsa-output-outer">
+            <div className="dsa-output markdown" dangerouslySetInnerHTML={{ __html: output }} /> 
+            </div>
+          </>
+        ) : (load? "Your Problem is being solved, it can take some time": null)}
+          <br /><br /><br />
+            <Button
+              onClick={() => {
+                navigator("/");
+              }}
+            >
+              back
+            </Button>
+        </div>
+      </>
     );
 }
 

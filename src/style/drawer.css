@@ -1,0 +1,8 @@
+.drawer-but-grp {
+    display: flex;
+    justify-content: center;
+}
+
+.drawer-but {
+    margin: 0 5px;
+}

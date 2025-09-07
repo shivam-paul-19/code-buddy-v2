@@ -63,7 +63,9 @@ function Home() {
         <p className="disclaimer">
           <i>Disclaimer</i>
           <br />
-          Inputs provided here may be accessed by OpenAI for monitoring or research purposes.<br />Please avoid sharing any personal, sensitive, or confidential information.
+          Inputs provided here may be accessed by OpenAI for monitoring or research purposes.
+          <br />
+          Please avoid sharing any personal, sensitive, or confidential information.
         </p>
       </div>
     </>

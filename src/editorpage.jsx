@@ -1,10 +1,8 @@
-import { useState, useRef } from "react";
-import axios from "axios";
-import Editor from "@monaco-editor/react";
+import { useState } from "react";
+
 import CodeEditor from "./components/editor";
 import { useNavigate, useLocation } from "react-router";
 
-import { defaultLines } from "./languages";
 import { executeCode } from "./execution";
 
 function EditorPage() {

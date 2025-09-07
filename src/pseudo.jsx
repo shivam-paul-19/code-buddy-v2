@@ -15,6 +15,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
+import ResultDrawer from "./components/drawer";
 
 let key = import.meta.env.VITE_OPEN_AI_API_KEY;
 
@@ -24,7 +25,7 @@ function Pseudo() {
   // gets value from the input code editor's value
   // and also get's response from OpenAI API
   const convertPseudo = async (value, lang) => {
-    SetOpen(true);
+    setOpen(true);
     setIsLoad(true);
     let res = await getResponse(value, "pseudo", key, lang);
     setIsLoad(false);
@@ -34,7 +35,7 @@ function Pseudo() {
 
   let [output, setOutput] = useState("");
   let [isLoad, setIsLoad] = useState(false);
-  let [open, SetOpen] = useState(false);
+  let [open, setOpen] = useState(false);
   let [lang, setLang] = useState("Python");
 
   return (
@@ -60,56 +61,7 @@ function Pseudo() {
           back
         </Button>
 
-        <Drawer open={open} onOpenChange={SetOpen}>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>
-                {!isLoad
-                  ? "Here's the actual code"
-                  : "Your code is being prepared, it may take some seconds..."}
-              </DrawerTitle>
-              <DrawerDescription>
-                <div
-                  style={{
-                    overflowX: "scroll",
-                    maxHeight: "320px",
-                  }}
-                >
-                  {!isLoad ? (
-                    <CodeEditor disableDropDown={true} line={output} />
-                  ) : null}
-                </div>
-              </DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter>
-              <Button
-                onClick={() => {
-                  navigator("/test", {
-                    state: {
-                      line: output,
-                      language: lang,
-                      parentPath: "/pseudo",
-                    },
-                  });
-                }}
-              >
-                Test Code
-              </Button>
-              <Button
-                onClick={async () => {
-                  await window.navigator.clipboard.writeText(output);
-                }}
-              >
-                Copy Code
-              </Button>
-              <DrawerClose>
-                <Button variant="outline" onClick={() => SetOpen(false)}>
-                  Close
-                </Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+        <ResultDrawer output={output} resLine={"sample line"} loadLine={"loading"} isLoad={isLoad} lang={lang} open={open} setOpen={setOpen} parentUrl="/pseudo"/>
       </div>
     </>
   );

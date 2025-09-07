@@ -5,6 +5,8 @@
     font-family: "Montserrat", sans-serif;
     color: #f1f5f9;
     text-align: center;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .page-title {
@@ -21,3 +23,43 @@
     margin-left: 10px;
     border: white 1px solid;
 }
+
+.dsa-link-input {
+    display: flex;
+    justify-content: center;
+}
+
+.link-input {
+    display: flex;
+}
+
+.lang-selector {
+    display: inline;
+    width: 200px;
+}
+
+.input-elements {
+    margin: 0 10px;
+}
+
+.dsa-output {
+    text-align: left;
+    width: 60%;
+    align-self: center;
+}
+.dsa-output-outer {
+    display: flex;
+    justify-content: center;
+    padding: 5px 0;
+}
+.white-but {
+    background-color: white;
+    color: black;
+}
+
+.markdown h1 { font-size: 1.875rem; font-weight: bold; margin: 1rem 0 0.5rem; }
+.markdown h2 { font-size: 1.5rem; font-weight: 600; margin: 0.75rem 0 0.5rem; }
+.markdown p  { margin-bottom: 1rem; line-height: 1.6; }
+.markdown ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+.markdown ol { list-style-type: decimal; margin-left: 1.5rem; margin-bottom: 1rem; }
+.markdown code {padding: 2px 4px; border-radius: 4px; font-size: 0.9rem; }
