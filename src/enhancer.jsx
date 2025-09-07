@@ -3,6 +3,8 @@ import CodeEditor from "./components/editor";
 import { useState } from "react";
 import { getResponse } from "./generate";
 
+import "./style/pages.css";
+
 import {
   Drawer,
   DrawerClose,
@@ -37,20 +39,23 @@ function Enhancer() {
 
     return (
       <>
-        <h1>this is code enhancer</h1>
-        <CodeEditor mode="enhance_in" sendValue={enhanceCode} />
-        <button
-          onClick={() => {
-            navigator("/");
-          }}
-        >
-          back
-        </button>
+        <div className="page">
+        <h1 className="page-title">Code Enhancer</h1>
+        <p className="page-tag">Drop your code here and enhance it.<br/>
+        (Select the language of the output, by default it is <b>Python</b> if not selected)</p>
+        <CodeEditor line="# Drop the code here" mode="enhance_in" sendValue={enhanceCode}/>
+        <Button className="back-but" onClick={() => {
+            navigator('/')
+        }}>back</Button>
 
         <Drawer open={open} onOpenChange={SetOpen}>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>Here's the enhanced Code</DrawerTitle>
+              <DrawerTitle>
+                {!isLoad
+                  ? "Here's the enhanced code"
+                  : "Your code is being enhanced, it may take some seconds..."}
+              </DrawerTitle>
               <DrawerDescription>
                 <div style={{
                     overflowX: "scroll",
@@ -60,7 +65,7 @@ function Enhancer() {
                         (!isLoad)? (
                             <CodeEditor disableDropDown={true} line={output}/>
                         ) : (
-                            <p>Loading</p>
+                            null
                         )
                     }
                 </div>
@@ -85,6 +90,7 @@ function Enhancer() {
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
+        </div>
       </>
     );
 }

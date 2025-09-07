@@ -1,0 +1,23 @@
+.page {
+    height: 100vh;
+    padding: 10px 50px;
+    background-color: #020617;
+    font-family: "Montserrat", sans-serif;
+    color: #f1f5f9;
+    text-align: center;
+}
+
+.page-title {
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.page-tag {
+    color: #cbd5e1;
+    font-style: italic;
+}
+
+.back-but {
+    margin-left: 10px;
+    border: white 1px solid;
+}

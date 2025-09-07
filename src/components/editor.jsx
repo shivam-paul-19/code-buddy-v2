@@ -1,11 +1,25 @@
 import Editor from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import { defaultLines, buttonLabels } from "../languages";
+import { Button } from "@/components/ui/button";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+import "../style/editor.css";
 
 function CodeEditor({
   language = "python",
   disableDropDown = false,
   disbaleSubmission = false,
+  theme = "vs-dark",
   line,
   mode,
   sendValue = ((v, l) => {})
@@ -37,6 +51,7 @@ function CodeEditor({
     setLang(e.target.value);
     setValue(defaultLines.get(e.target.value).defaultLine.get(mode));
     setValue(value);
+    console.log(e.target.value);
   };
 
   const handleSubmission = async () => {
@@ -47,27 +62,38 @@ function CodeEditor({
     <>
       {!disableDropDown ? (
         <form onChange={languageChange}>
-          <label htmlFor="lang">Choose langauge</label>
-          <select name="lang" id="lang">
-            <option value="python">Python</option>
-            <option value="javascript">JavaScript</option>
-            <option value="java">Java</option>
-          </select>
+        <Select>
+        <SelectTrigger className="w-[200px]" style={{
+            border: 0,
+            color: "white"
+          }}>
+          <SelectValue placeholder="Select the langauge"/>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Languages</SelectLabel>
+            <SelectItem value="python">Python</SelectItem>
+            <SelectItem value="javascript">JavaScript</SelectItem>
+            <SelectItem value="java">Java</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+        </Select>
         </form>
       ) : null}
 
       <Editor
-        height="80vh"
+        height="65vh"
         language={lang}
-        theme="vs-dark"
+        theme={theme}
         value={value}
         onChange={(value) => setValue(value)}
         options={{ quickSuggestions: false }}
         onMount={handleMount}
       />
+      <br />
       {
         (!disbaleSubmission)? (
-          <button onClick={handleSubmission}>{buttonLabels.get(mode)}</button>
+          <Button className="action-but" onClick={handleSubmission}>{buttonLabels.get(mode)}</Button>
         ) : null
       }
       
