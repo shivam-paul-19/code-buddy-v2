@@ -22,7 +22,8 @@ function CodeEditor({
   theme = "vs-dark",
   line,
   mode,
-  sendValue = ((v, l) => {})
+  sendValue = ((v, l) => {}),
+  height = "65vh"
 }) {
   // this function will call on the first render of the page
   useEffect(() => {
@@ -82,7 +83,7 @@ function CodeEditor({
       ) : null}
 
       <Editor
-        height="65vh"
+        height={height}
         language={lang}
         theme={theme}
         value={value}

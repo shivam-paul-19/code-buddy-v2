@@ -1,0 +1,10 @@
+.terminal {
+    background-color: black;
+    max-width: 100% !important;
+    width: 90%;
+    overflow-y: scroll;
+}
+
+.terminal::-webkit-scrollbar {
+  display: none;
+}

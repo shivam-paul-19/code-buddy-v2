@@ -31,9 +31,9 @@ function Solver() {
         e.preventDefault();
         setLoad(true);
         let res = await getResponse(e.target[0].value, "solve", API_KEY, lang);
-        let start = res.indexOf("```") + (lang).length;
+        let start = res.indexOf("```") + (lang).length + 3;
         let end = res.lastIndexOf("```");
-        let code = res.substring(start+2, end);
+        let code = res.substring(start, end);
         setCode(code);
         setOutput(marked(res));
         setLoad(false);
@@ -85,8 +85,8 @@ function Solver() {
             <Button className="input-elements white-but" type="submit">Solve</Button>
           </form>
                 </div>
-          {solved ? (<>
           <br /><br />
+          {solved ? (<>
             <Button className="white-but"
             onClick={() => {
                 navigator("/test", {
@@ -98,7 +98,7 @@ function Solver() {
             });
         }}
           >
-            test code
+            Test code
           </Button>
           <Button variant="outline white-but"
             onClick={async () => {
@@ -112,11 +112,12 @@ function Solver() {
             </div>
           </>
         ) : (load? "Your Problem is being solved, it can take some time": null)}
-          <br /><br /><br />
+          <br />
             <Button
               onClick={() => {
                 navigator("/");
               }}
+              style={{margin: "10px"}}
             >
               back
             </Button>
