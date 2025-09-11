@@ -43,9 +43,13 @@ function CodeEditor({
   let [lang, setLang] = useState(language);
 
   // puts focus on the editor
-  const handleMount = (editor) => {
+  const handleMount = (editor, monaco) => {
     editorRef.current = editor;
     editor.focus();
+    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: true,
+      noSyntaxValidation: true,
+    });
   };
 
   const languageChange = (e) => {
@@ -88,7 +92,10 @@ function CodeEditor({
         theme={theme}
         value={value}
         onChange={(value) => setValue(value)}
-        options={{ quickSuggestions: false }}
+        options={{ 
+          quickSuggestions: false,
+          suggestOnTriggerCharacters: false
+        }}
         onMount={handleMount}
       />
       <br />

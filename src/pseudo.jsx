@@ -58,10 +58,10 @@ function Pseudo() {
             navigator("/");
           }}
         >
-          back
+          Back
         </Button>
 
-        <ResultDrawer output={output} resLine={"sample line"} loadLine={"loading"} isLoad={isLoad} lang={lang} open={open} setOpen={setOpen} parentUrl="/pseudo"/>
+        <ResultDrawer output={output} resLine={"Here's the translated code!"} loadLine={"The Pseudo code is being analysed, it can take some time..."} isLoad={isLoad} lang={lang} open={open} setOpen={setOpen} parentUrl="/pseudo"/>
       </div>
     </>
   );

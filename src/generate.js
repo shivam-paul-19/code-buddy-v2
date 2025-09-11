@@ -80,7 +80,7 @@ const getPrompt = (mode, lang, input) => {
                 - Improving readability with proper naming conventions
                 - Optimizing performance
                 - Debugging if needed
-                - Adding subtle comments
+                - Adding comments for documentation
                 - Removing or reducing code duplication
 
                 Code to enhance:
@@ -124,11 +124,7 @@ export const getResponse = async (input, mode, key, lang) => {
     let prompt = getPrompt(mode, lang, input);
     console.log(prompt);
     // get the response
-    // let response = await callAPI(key, prompt);
+    let response = await callAPI(key, prompt);
     // return the response
-    // return response.output_text;
-    await (() => {
-        return new Promise(resolve => setTimeout(resolve, 2000));
-    })();
-    return getMockResponse(mode).output;
+    return response.output_text;
 };

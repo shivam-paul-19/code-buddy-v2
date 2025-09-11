@@ -26,22 +26,30 @@ function Solver() {
     let [code, setCode] = useState("");
     let [lang, setLang] = useState("python");
     let [load, setLoad] = useState(false);
+    let [valid, setValid] = useState(true);
 
     const handleSumbission = async (e) => {
         e.preventDefault();
         setLoad(true);
+        setSolved(false);
         let res = await getResponse(e.target[0].value, "solve", API_KEY, lang);
-        let start = res.indexOf("```") + (lang).length + 3;
-        let end = res.lastIndexOf("```");
-        let code = res.substring(start, end);
-        setCode(code);
-        setOutput(marked(res));
+        if(res == "-1") {
+          setOutput(marked("## The input link is either an invalid link or can't be accessed by our model :(\n Kindly check the link."));
+          setValid(false);
+        } else {
+          setValid(true);
+          let start = res.indexOf("```") + (lang).length + 3;
+          let end = res.lastIndexOf("```");
+          let code = res.substring(start, end);
+          setCode(code);
+          setOutput(marked(res));
+        }
         setLoad(false);
         setSolved(true);
     }
 
     const languageChange = (e) => {
-        setLang(e.target.value);
+      setLang(e.target.value);
     };
 
     return (
@@ -87,17 +95,17 @@ function Solver() {
                 </div>
           <br /><br />
           {solved ? (<>
-            <Button className="white-but"
-            onClick={() => {
+            {(valid)? (<><Button className="white-but"
+              onClick={() => {
                 navigator("/test", {
-                    state: {
-                  line: code,
-                  language: lang,
-                  parentPath: "/solve",
-                },
-            });
-        }}
-          >
+                  state: {
+                    line: code,
+                    language: lang,
+                    parentPath: "/solve",
+                  },
+                });
+              }}
+            >
             Test code
           </Button>
           <Button variant="outline white-but"
@@ -106,7 +114,7 @@ function Solver() {
             }}
           >
             Copy code
-          </Button>
+          </Button></>): null}
           <div className="dsa-output-outer">
             <div className="dsa-output markdown" dangerouslySetInnerHTML={{ __html: output }} /> 
             </div>

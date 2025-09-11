@@ -15,6 +15,13 @@ import "../style/drawer.css";
 
 function ResultDrawer({output, resLine, loadLine, isLoad, lang, open, setOpen, parentUrl}) {
     const navigator = useNavigate();
+
+    if(output == "-1") {
+      output = "// The input is either invalid, or has too ambuigities/error to be debugged."
+    } else if(output == "-2") {
+      output = "// The input code has too many ambuigities/error, and can't be debugged by the model."
+    }
+
     return (
         <>
         <Drawer open={open} onOpenChange={setOpen} className="dr">

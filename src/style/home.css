@@ -55,3 +55,12 @@
     font-family: "Montserrat", sans-serif;
     z-index: 1;
 }
+
+.fa-github {
+    font-size: 30px;
+    color: white;
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    z-index: 1;
+}
