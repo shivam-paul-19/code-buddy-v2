@@ -1,45 +1,45 @@
-// this file is for the interaction with the openAI API and manage prompts
+// This file handles interactions with OpenAI API via AWS Lambda
+// and constructs appropriate prompts based on the operation mode.
 
 import OpenAI from "openai";
-import { getMockResponse } from "./fakeres";
+import axios from "axios";
 
 /**
- * Calls the OpenAI API with a given prompt.
+ * Calls the OpenAI API through an AWS Lambda endpoint.
+ * Using Lambda helps hide the API key from client-side exposure.
  * 
- * @param {string} key   - OpenAI API key.
- * @param {string|object} prompt - The prompt or structured input.
- * @returns {Promise<string>} - The text output from the model.
+ * @param {string|object} prompt - The prompt to send to the model.
+ * @returns {Promise<string>} - The raw response text from the API.
  */
-const callAPI = async (key, prompt) => {
-    const client = new OpenAI({
-        apiKey: key,
-        dangerouslyAllowBrowser: true
-    });
-    
-    const response = await client.responses.create({
-        model: 'gpt-5-nano',
-        input: prompt,
-    });
+const callAPI = async (prompt) => {
+    console.log("called this function");
 
-    return response;
-}
+    // AWS Lambda endpoint which internally calls OpenAI
+    let response = await axios.post(
+        "https://iz8hfkucrj.execute-api.ap-south-1.amazonaws.com/default/openai-response/", 
+        { prompt: prompt }
+    );
+
+    console.log(response.data);
+    return response.data;
+};
 
 /**
- * Builds a prompt based on the mode of operation.
+ * Generates a structured prompt based on the mode of operation.
  * 
  * Modes:
- * - "solve"   : DSA problem solving (returns explanation + code + analysis).
- * - "enhance" : Enhance given code (returns only improved code).
- * - "pseudo"  : Convert pseudo-code into actual code (returns only code).
+ * - "solve"   : DSA problem solver (explanation + code + complexity + dry run)
+ * - "enhance" : Code enhancer (returns improved code only)
+ * - "pseudo"  : Converts pseudo-code into actual code
  * 
- * @param {string} mode  - Operation type ("solve" | "enhance" | "pseudo").
- * @param {string} lang  - Target programming language.
- * @param {string} input - Problem statement or code snippet.
- * @returns {string} - The final prompt string.
+ * @param {string} mode  - Mode of operation ("solve", "enhance", "pseudo")
+ * @param {string} lang  - Programming language for code output
+ * @param {string} input - Problem statement, code snippet, or pseudo code
+ * @returns {string} - The final prompt to be sent to OpenAI
  */
 const getPrompt = (mode, lang, input) => {
-    if (mode == "solve") {
-        // dsa solver
+    if (mode === "solve") {
+        // Construct DSA solver prompt
         return `If "${input}" is NOT a valid DSA problem link 
                 (from platforms like LeetCode, GeeksforGeeks, etc.), 
                 then return ONLY "-1" with no explanation.
@@ -67,8 +67,8 @@ const getPrompt = (mode, lang, input) => {
 
                 ## Other Approaches
                 (Brief list, no code)`;
-    } else if (mode == "enhance") {
-        // prompt to enhance code
+    } else if (mode === "enhance") {
+        // Construct code enhancer prompt
         return `If the following input is NOT valid ${lang} code, 
                 return ONLY "-1" with no explanation.
 
@@ -89,8 +89,8 @@ const getPrompt = (mode, lang, input) => {
                 Return ONLY valid ${lang} code.
                 No markdown, no extra explanation outside the code.
                 Subtle inline comments are allowed.`;
-    } else if (mode == "pseudo") {
-        // prompt to convert pseudo code into actual code
+    } else if (mode === "pseudo") {
+        // Construct pseudo-code to code prompt
         return `If the following input is NOT pseudo code, 
                 return ONLY "-1" with no explanation.
 
@@ -109,22 +109,23 @@ const getPrompt = (mode, lang, input) => {
     }
 };
 
-
 /**
- * Wrapper function to generate the prompt and fetch the response.
+ * Main wrapper to generate prompt and fetch response from OpenAI via Lambda.
  * 
- * @param {string} input - The problem statement or code snippet.
- * @param {string} mode  - Operation type ("solve" | "enhance" | "pseudo").
- * @param {string} key   - OpenAI API key.
- * @param {string} lang  - Target programming language.
- * @returns {Promise<string>} - The model's response as plain text.
+ * @param {string} input - User input (problem, code, pseudo code)
+ * @param {string} mode  - Operation type ("solve", "enhance", "pseudo")
+ * @param {string} key   - OpenAI API key (used in Lambda, not exposed)
+ * @param {string} lang  - Target programming language for code output
+ * @returns {Promise<string>} - AI-generated response (plain text/code)
  */
-export const getResponse = async (input, mode, key, lang) => {
-    // make the prompt according to the requirement
+export const getResponse = async (input, mode, lang) => {
+    // Build the appropriate prompt
     let prompt = getPrompt(mode, lang, input);
     console.log(prompt);
-    // get the response
-    let response = await callAPI(key, prompt);
-    // return the response
-    return response.output_text;
+
+    // Fetch the response from AWS Lambda (which internally calls OpenAI)
+    let response = await callAPI(prompt);
+
+    // Return the AI-generated response
+    return response;
 };
