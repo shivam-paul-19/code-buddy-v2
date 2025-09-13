@@ -3,7 +3,7 @@
 // It includes links, interactive animations, buttons to navigate to different pages, and a disclaimer for users.
 
 import { useNavigate } from "react-router-dom"; // Hook for programmatic navigation between routes
-import { Button } from "@/components/ui/Button"; // Reusable Button component from UI library
+import { Button } from "@/components/ui/button"; // Reusable Button component from UI library
 import { InteractiveGridPattern } from "@/components/magicui/interactive-grid-pattern"; // Animated grid background
 import { cn } from "@/lib/utils"; // Utility function for combining class names conditionally
 import { AuroraText } from "@/components/magicui/aurora-text"; // Fancy gradient text component

@@ -9,7 +9,7 @@ import { marked } from "marked"; // converts markdown to HTML
 import { getResponse } from "./generate"; // API call to OpenAI via Lambda
 
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
