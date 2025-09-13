@@ -16,7 +16,7 @@ const callAPI = async (prompt) => {
 
     // AWS Lambda endpoint which internally calls OpenAI
     let response = await axios.post(
-        "https://iz8hfkucrj.execute-api.ap-south-1.amazonaws.com/default/openai-response/", 
+        "https://on9lboauqh.execute-api.ap-south-1.amazonaws.com/default/openai-response", 
         { prompt: prompt }
     );
 

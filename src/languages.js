@@ -32,6 +32,17 @@ export const defaultLines = new Map([
       ]),
     },
   ],
+  [
+    "cpp",
+    {
+      version: "10.2.0",
+      defaultLine: new Map([
+        ["pseudo_out", "// The actual code will appear here"],
+        ["enhance_in", "// Enter your code here"],
+        ["enhance_out", "// Enhanced code will appear here"],
+      ]),
+    },
+  ],
 ]);
 
 export const buttonLabels = new Map([

@@ -78,8 +78,9 @@ function CodeEditor({
           <SelectGroup>
             <SelectLabel>Languages</SelectLabel>
             <SelectItem value="python">Python</SelectItem>
-            <SelectItem value="javascript">JavaScript</SelectItem>
             <SelectItem value="java">Java</SelectItem>
+            <SelectItem value="cpp">C++</SelectItem>
+            <SelectItem value="javascript">JavaScript</SelectItem>
           </SelectGroup>
         </SelectContent>
         </Select>
