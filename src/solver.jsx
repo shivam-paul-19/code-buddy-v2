@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 
 import "./style/pages.css";
+import ProgressBar from "./components/progress";
 
 function Solver() {
   const navigator = useNavigate();
@@ -32,6 +33,8 @@ function Solver() {
   let [lang, setLang] = useState("python");  // selected output language
   let [load, setLoad] = useState(false);     // loading state
   let [valid, setValid] = useState(true);    // input validity flag
+  let [disable, setDisable] = useState(false);
+  let [showProg, setShowProg] = useState(false);
 
   /**
    * Handles problem submission.
@@ -45,6 +48,8 @@ function Solver() {
     e.preventDefault();
     setLoad(true);
     setSolved(false);
+    setDisable(true);
+    setShowProg(true);
 
     // Call API to get AI response for the problem
     let res = await getResponse(e.target[0].value, "solve", lang);
@@ -69,8 +74,12 @@ function Solver() {
       setOutput(marked(res));
     }
 
-    setLoad(false);
-    setSolved(true);
+    setShowProg(false);
+    setTimeout(() => {
+      setLoad(false);
+      setSolved(true);
+      setDisable(false);
+    }, 500); 
   };
 
   /**
@@ -129,14 +138,21 @@ function Solver() {
               placeholder="Put the link here"
               required
             />
-            <Button className="input-elements white-but" type="submit">
-              Solve
-            </Button>
+            {
+              (disable)? (
+                <Button className="input-elements white-but" type="submit" disabled>
+                  Solve
+                </Button>
+              ) : (
+                <Button className="input-elements white-but" type="submit">
+                  Solve
+                </Button>
+              )
+            }
           </form>
         </div>
         <br />
         <br />
-
         {/* Output section */}
         {solved ? (
           <>
@@ -175,7 +191,10 @@ function Solver() {
             </div>
           </>
         ) : load ? (
+          <div className="loading-solve-box">
           "Your Problem is being solved, it can take some time"
+          <ProgressBar theme="light" expectedTime={15} load={showProg}/>
+          </div>
         ) : null}
         <br />
 

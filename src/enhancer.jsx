@@ -27,10 +27,16 @@ function Enhancer() {
     const enhanceCode = async (value, lang) => {
         setIsLoad(true); // Show loading state
         setOpen(true);   // Open the result drawer
+        showProg(true);
+
         let res = await getResponse(value, "enhance", lang); // Fetch enhanced code
-        setIsLoad(false); // Hide loading
-        setOutput(res);   // Set the enhanced code to state
-        setLang(lang);    // Update selected language in state
+
+        setShowProg(false);
+        setTimeout(() => {
+          setIsLoad(false); // Hide loading
+          setOutput(res);   // Set the enhanced code to state
+          setLang(lang);    // Update selected language in state
+        }, 500);
     }
     
     // -------------------------------
@@ -40,6 +46,7 @@ function Enhancer() {
     let [isLoad, setIsLoad] = useState(false); // Tracks if enhancement is in progress
     let [open, setOpen] = useState(false); // Controls drawer visibility
     let [lang, setLang] = useState("Python"); // Stores the selected language (default Python)
+    let [showProg, setShowProg] = useState(false);
 
     return (
       <>
@@ -80,6 +87,7 @@ function Enhancer() {
             open={open}              // Drawer visibility
             setOpen={setOpen}        // Function to toggle drawer visibility
             parentUrl="/enhancer"    // Parent page route (used for navigation or context)
+            showLoad={showProg}
           />
         </div>
       </>

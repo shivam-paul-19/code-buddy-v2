@@ -6,3 +6,9 @@
 .drawer-but {
     margin: 0 5px;
 }
+
+.drawer-load {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

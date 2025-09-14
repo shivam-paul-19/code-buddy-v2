@@ -10,10 +10,11 @@ import {
 import { Button } from "@/components/ui/button";
 import CodeEditor from "./editor";
 import {useNavigate} from "react-router-dom";
+import ProgressBar from "./progress";
 
 import "../style/drawer.css";
 
-function ResultDrawer({output, resLine, loadLine, isLoad, lang, open, setOpen, parentUrl}) {
+function ResultDrawer({output, resLine, loadLine, isLoad, lang, open, setOpen, parentUrl, showLoad}) {
     const navigator = useNavigate();
 
     if(output == "-1") {
@@ -30,7 +31,12 @@ function ResultDrawer({output, resLine, loadLine, isLoad, lang, open, setOpen, p
               <DrawerTitle>
                 {!isLoad
                   ? resLine
-                  : loadLine}
+                  : 
+                  <div className="drawer-load">
+                    <ProgressBar theme="dark" load={showLoad} expectedTime={10}/>
+                    {loadLine}
+                  </div>
+                }
               </DrawerTitle>
               <DrawerDescription>
                 <div style={{
@@ -49,18 +55,41 @@ function ResultDrawer({output, resLine, loadLine, isLoad, lang, open, setOpen, p
             </DrawerHeader>
             <DrawerFooter>
                 <div className="drawer-but-grp">
-              <Button className="drawer-but" onClick={() => {
-                navigator("/test", {
-                  state: {
-                    line: output,
-                    language: lang,
-                    parentPath: parentUrl
+                  {
+                    isLoad? (
+                      <Button disabled className="drawer-but" onClick={() => {
+                        navigator("/test", {
+                          state: {
+                            line: output,
+                            language: lang,
+                            parentPath: parentUrl
+                          }
+                        })
+                      }}>Test Code</Button>
+                    ) : (
+                      <Button className="drawer-but" onClick={() => {
+                        navigator("/test", {
+                          state: {
+                            line: output,
+                            language: lang,
+                            parentPath: parentUrl
+                          }
+                        })
+                      }}>Test Code</Button>
+
+                    )
                   }
-                })
-              }}>Test Code</Button>
-              <Button className="drawer-but" onClick={async () => {
-                await window.navigator.clipboard.writeText(output);
-              }}>Copy Code</Button>
+              {
+                isLoad? (
+                  <Button disabled className="drawer-but" onClick={async () => {
+                    await window.navigator.clipboard.writeText(output);
+                  }}>Copy Code</Button>
+                ) : (
+                  <Button className="drawer-but" onClick={async () => {
+                    await window.navigator.clipboard.writeText(output);
+                  }}>Copy Code</Button>
+                )
+              }
               <DrawerClose>
                 <Button className="drawer-but" variant="outline" onClick={() => setOpen(false)}>Close</Button>
               </DrawerClose>

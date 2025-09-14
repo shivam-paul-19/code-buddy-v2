@@ -54,6 +54,12 @@
     padding: 5px 0;
 }
 
+.loading-solve-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .white-but {
     background-color: white;
     color: black;

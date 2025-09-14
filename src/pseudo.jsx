@@ -36,12 +36,16 @@ function Pseudo() {
   const convertPseudo = async (value, lang) => {
     setOpen(true);     // Open drawer immediately to show loading state
     setIsLoad(true);   // Indicate translation is in progress
+    setShowProg(true);
 
     let res = await getResponse(value, "pseudo", lang); // Get translated code
 
-    setIsLoad(false);  // Hide loading once done
-    setOutput(res);    // Store translated code
-    setLang(lang);     // Save the chosen language
+    setShowProg(false);
+    setTimeout(() => {
+      setIsLoad(false);  // Hide loading once done
+      setOutput(res);    // Store translated code
+      setLang(lang);     // Save the chosen language
+    }, 500);
   };
 
   // -------------------------------
@@ -51,6 +55,7 @@ function Pseudo() {
   let [isLoad, setIsLoad] = useState(false); // Loading indicator
   let [open, setOpen] = useState(false);    // Controls drawer visibility
   let [lang, setLang] = useState("Python"); // Default output language
+  let [showProg, setShowProg] = useState(false);
 
   return (
     <>
@@ -92,6 +97,7 @@ function Pseudo() {
           open={open}      // Drawer visibility
           setOpen={setOpen} // Function to control drawer open/close
           parentUrl="/pseudo" // Context for drawer (useful for navigation)
+          showLoad={showProg}
         />
       </div>
     </>
