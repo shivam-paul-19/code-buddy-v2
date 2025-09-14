@@ -1,1 +1,1 @@
-# unnamed full stack project
+# Code Buddy v2
