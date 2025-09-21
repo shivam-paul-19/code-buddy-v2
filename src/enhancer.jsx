@@ -25,9 +25,9 @@ function Enhancer() {
     // value - The code input by the user.
     // lang  - The programming language selected by the user.
     const enhanceCode = async (value, lang) => {
-        setIsLoad(true); // Show loading state
         setOpen(true);   // Open the result drawer
-        showProg(true);
+        setIsLoad(true); // Show loading state
+        setShowProg(true);
 
         let res = await getResponse(value, "enhance", lang); // Fetch enhanced code
 
