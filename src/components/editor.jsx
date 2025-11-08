@@ -9,7 +9,6 @@
  * - Theme customization
  * - Submission handling via callback
  * 
- * Author: Shivam
  * Component Type: Functional React Component
  */
 
